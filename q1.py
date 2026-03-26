@@ -1,8 +1,8 @@
-#1.SMOOTH AN IMAGE USING GAUSSIAN AND MEDIAN FILTERS
+  1.SMOOTH AN IMAGE USING GAUSSIAN AND MEDIAN FILTERS
 
 import cv2
 
-img = cv2.imread("img.jpeg")
+img = cv2.imread("img.jpg")
 
 gaussian = cv2.GaussianBlur(img, (5, 5), sigmaX=1.0)
 median = cv2.medianBlur(img, 5)
@@ -14,12 +14,13 @@ cv2.imshow("Median Filtered Image", median)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-#2.MORPHOLOGICAL OPERATIONS-EROSION,DILATION,OPENING,CLOSING
+
+2.MORPHOLOGICAL OPERATIONS-EROSION,DILATION,OPENING,CLOSING
 
 import cv2
 import numpy as np
 
-img = cv2.imread("img.jpeg", cv2.IMREAD_GRAYSCALE)
+img = cv2.imread("img.png", cv2.IMREAD_GRAYSCALE)
 
 kernel = np.ones((5, 5), np.uint8)
 
@@ -46,13 +47,13 @@ cv2.destroyAllWindows()
 
 
 
-#3.EDGE DETECTION-LAPLACIAN,SOBEL,PREWITT,ROBERT,1-D GRADIENT
+3.EDGE DETECTION-LAPLACIAN,SOBEL,PREWITT,ROBERT,1-D GRADIENT
 
 
 import cv2
 import numpy as np
 
-img = cv2.imread("img.jpeg", cv2.IMREAD_GRAYSCALE)
+img = cv2.imread("flower.jpg", cv2.IMREAD_GRAYSCALE)
 
 # ------------------ SOBEL ------------------
 sobel_x = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3)
@@ -95,16 +96,14 @@ cv2.imshow("Laplacian", laplacian)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
-
-#4. RGB TO CMY AND HSV
+4. RGB TO CMY AND HSV
 
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 from matplotlib.colors import rgb_to_hsv
 
-img = cv2.imread("img.jpeg")
+img = cv2.imread("flower.jpg")
 
 # Convert to 0–1 range (for HSV)
 if img.dtype == np.uint8:
@@ -146,48 +145,49 @@ plt.show()
 
 
 
-#5.K MEANS CLUSTERING
-
+5.K MEANS CLUSTERING
 import cv2  
 import numpy as np   
 import matplotlib.pyplot as plt 
 
-img = cv2.imread("img.jpeg")  
+img = cv2.imread("shinchan.png")  
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  
 
-Z = np.float32(img.reshape((-1, 3))) 
-criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)  # stop condition
+Z = np.float32(img.reshape((-1, 3)))  
+
+criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)  
 
 plt.figure(figsize=(12, 8))
-plt.subplot(2,3,1);
-plt.imshow(img);
-plt.title("org"); 
+
+plt.subplot(2,3,1)
+plt.imshow(img)
+plt.title("org")
 plt.axis("off") 
 
-for i, k in enumerate([2,4,6,8]):  # loop over k values
-   _, labels, centers = cv2.kmeans(Z, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS) 
+for i, k in enumerate([2,4,6,8]):  
+    _, labels, centers = cv2.kmeans(Z, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS) 
 
-   centers = np.uint8(centers)  # convert centers to int
-   res = centers[labels.flatten()] 
-   res = res.reshape(img.shape)  # reshape back to image
+    centers = np.uint8(centers)  
+    res = centers[labels.flatten()] 
+    res = res.reshape(img.shape)  
 
-   plt.subplot(2,3,i+2);
-plt.imshow(res);
-plt.title(f"k={k}");
-plt.axis("off")  # show result
+    plt.subplot(2,3,i+2)
+    plt.imshow(res)
+    plt.title(f"k={k}")
+    plt.axis("off")  
 
 plt.tight_layout()
 plt.show()
 
 
-#6.NAIVE BAYES 
 
+6.NAIVE BAYES 
 
 import cv2, numpy as np
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
 
-paths = ["pic.jpeg", "pic.jpeg", "pic1.jpeg", "pic.jpeg"]
+paths = ["pic.jpg", "pic.jpg", "pic1.jpg", "pic.jpg"]
 labels = np.array(["cat", "dog", "cat", "dog"])
 
 data = [cv2.resize(cv2.imread(p, 0), (64,64)).flatten() for p in paths]
@@ -197,25 +197,21 @@ pred = model.predict(data)
 
 print("Pred:", pred)
 print("Acc:", accuracy_score(labels, pred))
+OUTPUT 
+Pred: ['dog' 'dog' 'cat' 'dog']
+Acc: 0.75
 
-
-#7.HOUGH TRANSFORM
+7.HOUGH TRANSFORM
 
 import cv2
 import numpy as np
 
-img = cv2.imread("img.jpeg")
+img = cv2.imread("input.jpg")
 
-if img is None:
-    print("Error: could not load img")
-    exit()
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
 edges = cv2.Canny(gray, 50, 150, apertureSize=3)
-
 lines = cv2.HoughLines(edges, 1, np.pi/180, 150)
-
 if lines is not None:
     for line in lines[:5]:
         rho, theta = line[0]   # unpacking ρ & θ correctly
@@ -225,15 +221,11 @@ if lines is not None:
 
         x0 = a * rho
         y0 = b * rho
-
         x1 = int(x0 + 1000 * (-b))
         y1 = int(y0 + 1000 * (a))
-
         x2 = int(x0 - 1000 * (-b))
         y2 = int(y0 - 1000 * (a))
-
         cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
-
 else:
     print("No lines detected")
 
@@ -241,50 +233,42 @@ cv2.imshow("detected lines", img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-#8. PCA
 
 
-import cv2
-import numpy as np
+
+
+
+
+
+8. PCA
+import cv2,
+ numpy as np
 import matplotlib.pyplot as plt
 
-img = cv2.imread("img.jpeg")
-img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-# Convert to grayscale
-gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-gray = np.float32(gray)
- 
-# Apply PCA
-mean, eigenvectors = cv2.PCACompute(gray, mean=None, maxComponents=50)
-
-pca_result = cv2.PCAProject(gray, mean, eigenvectors)
-reconstructed = cv2.PCABackProject(pca_result, mean, eigenvectors)
-
-plt.figure(figsize=(8,4))
+img = cv2.cvtColor(cv2.imread("shinchan.png"), cv2.COLOR_BGR2RGB) gray = np.float32(cv2.cvtColor(img, cv2.COLOR_RGB2GRAY))  
+mean, eig = cv2.PCACompute(gray, mean=None, maxComponents=50)  recon = cv2.PCABackProject(cv2.PCAProject(gray, mean, eig), mean, eig) 
 
 plt.subplot(1,2,1)
 plt.imshow(gray, cmap='gray')
-plt.title("Original Image")
+plt.title("Original")
 plt.axis("off")
 
 plt.subplot(1,2,2)
-plt.imshow(reconstructed, cmap='gray')
-plt.title("PCA Reduced Image")
+plt.imshow(recon, cmap='gray')
+plt.title("PCA Reduced")
 plt.axis("off")
 
 plt.tight_layout()
 plt.show()
 
 
-#9. BIT PLANE CODING
-
+9. BIT PLANE CODING
 
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-img = cv2.imread("img.jpeg", 0)
+img = cv2.imread("image.jpg", 0)
 
 # Bit-plane extraction (MSB - highest bit plane)
 bit_plane = (img >> 7) & 1
@@ -295,34 +279,39 @@ plt.title("Higher Bit Plane (MSB)")
 plt.axis("off")
 plt.show()
 
-#10. HANDWRITTEN RECOGNITION
 
 
-import cv2
-import matplotlib.pyplot as plt
+
+
+
+
+
+10. HANDWRITTEN RECOGNITION
+
+10.import cv2, numpy as np
 from sklearn.datasets import fetch_openml
 from sklearn.neighbors import KNeighborsClassifier
 
-# Load & train
-X, y = fetch_openml('mnist_784', return_X_y=True)
-model = KNeighborsClassifier(n_neighbors=3).fit(X/255.0, y.astype(int))
+X,y = fetch_openml('mnist_784', return_X_y=True)
+model = KNeighborsClassifier(3).fit(X/255.0, y.astype(int))
 
-while True:
-    path = input("Enter image path (type exit to stop): ")
-    if path.lower() == "exit":
-        break
+img = cv2.imread("digit.png",0)
 
-    img = cv2.imread(path, 0)
-    if img is None:
-        print("Invalid image path")
-        continue
+if img is None:
+    print("Image not found"); exit()
 
-    img = cv2.resize(img, (28,28))
-    _, img = cv2.threshold(img, 120, 255, cv2.THRESH_BINARY_INV)
+img = cv2.resize(img,(28,28))
 
-    pred = model.predict(img.reshape(1,784)/255.0)[0]
+if np.mean(img) > 127:
+    img = 255 - img  
+_, img = cv2.threshold(img,100,255,cv2.THRESH_BINARY)
 
-    plt.imshow(img, cmap='gray')
-    plt.title(f"Predicted Digit: {pred}")
-    plt.axis("off")
-    plt.show()
+
+img = img/255.0
+
+pred = model.predict(img.reshape(1,784))[0]
+
+cv2.imshow("Processed",img)
+print("Predicted:",pred)
+cv2.waitKey(0)
+
